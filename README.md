@@ -1,4 +1,4 @@
-jfinal-slf4j
+jfinal-utils
 ============
 
-jfinal  slf4j  log api
+jfinal  utils
