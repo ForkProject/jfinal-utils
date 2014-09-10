@@ -48,6 +48,8 @@
     <jfinal-slf4j.version>0.1</jfinal-slf4j.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-lang3.version>3.3.2</commons-lang3.version>
+    <joda.version>2.3</joda.version>
+    <servlet.version>3.1.0</servlet.version>
   </properties>
 
   <dependencies>
@@ -77,11 +79,26 @@
       <version>${commons-lang3.version}</version>
     </dependency>
 
+    <!--时间工具-->
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>${joda.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>cn.dreampie</groupId>
       <artifactId>jfinal-slf4j</artifactId>
       <version>${jfinal-slf4j.version}</version>
     </dependency>
+
+    <!--servlet-api-->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servlet.version}</version>
+    </dependency>
+
   </dependencies>
 
   <distributionManagement>
