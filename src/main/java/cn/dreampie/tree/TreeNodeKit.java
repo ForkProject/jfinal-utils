@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by wangrenhui on 14-4-12.
  */
-public class TreeUtils {
+public class TreeNodeKit {
 
   public static List toTree(List params) {
     List nodes = null;

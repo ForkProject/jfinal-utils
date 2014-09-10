@@ -4,7 +4,7 @@ import javax.crypto.Cipher;
 import java.security.Key;
 import java.security.Security;
 
-public class EncryptionTextUtils {
+public class EncryptionTextKit {
   private static String strDefaultKey = "_jfinal_secret_key";
 
   /**
@@ -22,7 +22,7 @@ public class EncryptionTextUtils {
    *
    * @throws Exception exception
    */
-  public EncryptionTextUtils() throws Exception {
+  public EncryptionTextKit() throws Exception {
     this(strDefaultKey);
   }
 
@@ -32,7 +32,7 @@ public class EncryptionTextUtils {
    * @param strKey 指定的密钥
    * @throws Exception exception
    */
-  public EncryptionTextUtils(String strKey) throws Exception {
+  public EncryptionTextKit(String strKey) throws Exception {
     Security.addProvider(new com.sun.crypto.provider.SunJCE());
     Key key = getKey(strKey.getBytes());
 

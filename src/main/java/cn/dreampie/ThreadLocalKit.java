@@ -11,8 +11,8 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by wangrenhui on 13-12-31.
  */
-public class ThreadLocalUtils {
-  protected static final Logger logger = Logger.getLogger(ThreadLocalUtils.class);
+public class ThreadLocalKit {
+  protected static final Logger logger = Logger.getLogger(ThreadLocalKit.class);
   // request线程对象
   private static ThreadLocal<HttpServletRequest> requestLocal = new ThreadLocal<HttpServletRequest>();
 

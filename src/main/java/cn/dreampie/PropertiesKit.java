@@ -15,16 +15,16 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by wangrenhui on 14-4-10.
  */
-public class PropertiesUtils {
+public class PropertiesKit {
   private ConcurrentMap<String, Object> properties = new ConcurrentHashMap<String, Object>();
 
-  private static PropertiesUtils propertiesUtils = new PropertiesUtils();
+  private static PropertiesKit propertiesKit = new PropertiesKit();
 
-  private PropertiesUtils() {
+  private PropertiesKit() {
   }
 
-  public static PropertiesUtils me() {
-    return propertiesUtils;
+  public static PropertiesKit me() {
+    return propertiesKit;
   }
 
 

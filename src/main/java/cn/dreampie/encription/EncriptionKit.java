@@ -15,7 +15,7 @@ import java.security.MessageDigest;
  *         加密工具
  *         2012-5-25 下午4:59:05
  */
-public class EncriptionUtils {
+public class EncriptionKit {
   /**
    * md5加密
    *
@@ -62,7 +62,7 @@ public class EncriptionUtils {
    */
   public static String textEncrypt(String text, String salt) {
     try {
-      EncryptionTextUtils textEncryptor = new EncryptionTextUtils(salt);
+      EncryptionTextKit textEncryptor = new EncryptionTextKit(salt);
       String result = textEncryptor.encrypt(text);
       return result;
     } catch (Exception e) {
@@ -80,7 +80,7 @@ public class EncriptionUtils {
    */
   public static String textDecrypt(String text, String salt) {
     try {
-      EncryptionTextUtils textEncryptor = new EncryptionTextUtils(salt);
+      EncryptionTextKit textEncryptor = new EncryptionTextKit(salt);
       String result = textEncryptor.decrypt(text);
       return result;
     } catch (Exception e) {
