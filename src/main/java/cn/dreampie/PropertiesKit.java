@@ -20,8 +20,6 @@ public class PropertiesKit {
 
   private static PropertiesKit propertiesKit = new PropertiesKit();
 
-  private PropertiesKit() {
-  }
 
   public static PropertiesKit me() {
     return propertiesKit;

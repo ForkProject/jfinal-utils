@@ -10,8 +10,6 @@ import java.util.Map;
  */
 public class PinyinSortKit {
 
-  private PinyinSortKit(){}
-
   public static void main(String[] args) {
     PinyinSortKit obj1 = new PinyinSortKit();
 

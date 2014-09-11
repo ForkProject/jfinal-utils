@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 
 public class ValidateKit {
 
-  private ValidateKit() {
-  }
 
   /**
    * 匹配正则表达式
