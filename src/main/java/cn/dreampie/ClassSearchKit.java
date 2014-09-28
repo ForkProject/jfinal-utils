@@ -51,25 +51,34 @@ public class ClassSearchKit {
      */
     List<String> classFiles = Lists.newArrayList();
     //判断class路径
-    URL baseURL = ClassSearchKit.class.getResource(File.separator + baseDirName.replaceAll("\\.", "/"));
-    if (baseURL != null) {
-      // 得到协议的名称
-      String protocol = baseURL.getProtocol();
-      String basePath = baseURL.getFile();
+    Enumeration<URL> baseURLs = null;
+    try {
+      baseURLs = ClassSearchKit.class.getClassLoader().getResources(File.separator + baseDirName.replaceAll("\\.", "/"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    URL baseURL = null;
+    while (baseURLs.hasMoreElements()) {
+      baseURL = baseURLs.nextElement();
+      if (baseURL != null) {
+        // 得到协议的名称
+        String protocol = baseURL.getProtocol();
+        String basePath = baseURL.getFile();
 
-      // 如果是以文件的形式保存在服务器上
+        // 如果是以文件的形式保存在服务器上
 //      if ("file".equals(protocol)) {
 //      } else
-      if ("jar".equals(protocol)) {
-        String[] paths = basePath.split("!/");
-        // 获取jar
-        try {
-          classFiles = findJarFile(paths[0].replace("file:", ""), paths[1]);
-        } catch (IOException e) {
-          e.printStackTrace();
+        if ("jar".equals(protocol)) {
+          String[] paths = basePath.split("!/");
+          // 获取jar
+          try {
+            classFiles = findJarFile(paths[0].replace("file:", ""), paths[1]);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        } else {
+          classFiles = findPathFiles(basePath, targetFileName);
         }
-      } else {
-        classFiles = findPathFiles(basePath, targetFileName);
       }
     }
     return classFiles;
@@ -101,7 +110,7 @@ public class ClassSearchKit {
           tempName = readfile.getName();
           if (ClassSearchKit.wildcardMatch(targetFileName, tempName)) {
             tem = readfile.getAbsoluteFile().toString().replaceAll("\\\\", "/");
-            classname = tem.substring(tem.indexOf("/classes") + "/classes".length() + 1,
+            classname = tem.substring(tem.indexOf("classes/") + "classes/".length(),
                 tem.indexOf(".class"));
             classFiles.add(classname.replaceAll("/", "."));
           }
@@ -206,7 +215,19 @@ public class ClassSearchKit {
 
   public <T> List<Class<? extends T>> search() {
     if (includepaths.size() <= 0) {
-      List<String> classFileList = findPathFiles(this.getClass().getResource(File.separator).getPath(), "*.class");
+      List<String> classFileList = Lists.newArrayList();
+      Enumeration<URL> resources = null;
+      try {
+        resources = ClassSearchKit.class.getClassLoader().getResources("");
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      URL resource = null;
+      while (resources.hasMoreElements()) {
+        resource = resources.nextElement();
+        classFileList.addAll(findPathFiles(resource.getPath(), "*.class"));
+      }
+
 //      classFileList.addAll(findjarFiles(libDir, includeJars, null));
       return extraction(target, classFileList);
     } else {

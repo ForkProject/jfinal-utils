@@ -26,6 +26,12 @@ public class PropertiesKit {
     return propertiesKit;
   }
 
+  public static boolean exist(String file) {
+    URL url = PathKit.class.getResource(file);
+    if (url != null)
+      return true;
+    return false;
+  }
 
   public Properties loadPropertyFile(String file) {
     Properties properties = new Properties();
