@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,20 +43,31 @@ public class PropertiesKit {
     else
       fullFile = PathKit.getWebRootPath() + File.separator + "WEB-INF" + File.separator + file;
     File propFile = new File(fullFile);
+
+    URL url = null;
     //判断文件是否存在WebInf
     if (!propFile.exists()) {
-      if (startStuff)
-        fullFile = PathKit.getRootClassPath() + file;
-      else
-        fullFile = PathKit.getRootClassPath() + File.separator + file;
-      propFile = new File(fullFile);
+      if (startStuff) {
+        url = PropertiesKit.class.getResource(file);
+//        fullFile = PathKit.getRootClassPath() + file;
+      } else {
+        url = PropertiesKit.class.getResource(File.separator + file);
+//        fullFile = PathKit.getRootClassPath() + File.separator + file;
+      }
+
+//      propFile = new File(fullFile);
       //判断文件是否存在class
-      if (!propFile.exists()) {
+      if (url == null) {
         throw new IllegalArgumentException("Properties file not found: " + fullFile);
       }
     }
     try {
-      inputStream = new FileInputStream(new File(fullFile));
+      //不是通过resource读取
+      if (url == null)
+        inputStream = new FileInputStream(propFile);
+      else
+        inputStream = url.openStream();
+
       properties.load(inputStream);
     } catch (Exception eOne) {
       try {
