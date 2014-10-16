@@ -23,6 +23,8 @@ public class AntPathMatcher implements PatternMatcher {
   /**
    * Set the path separator to use for pattern parsing.
    * Default is "/", as in Ant.
+   *
+   * @param pathSeparator pathSep
    */
   public void setPathSeparator(String pathSeparator) {
     this.pathSeparator = (pathSeparator != null ? pathSeparator : DEFAULT_PATH_SEPARATOR);
@@ -54,7 +56,7 @@ public class AntPathMatcher implements PatternMatcher {
    * @param fullMatch whether a full pattern match is required
    *                  (else a pattern match as far as the given base path goes is sufficient)
    * @return <code>true</code> if the supplied <code>path</code> matched,
-   *         <code>false</code> if it didn't
+   * <code>false</code> if it didn't
    */
   protected boolean doMatch(String pattern, String path, boolean fullMatch) {
     if (path.startsWith(this.pathSeparator) != pattern.startsWith(this.pathSeparator)) {
@@ -191,7 +193,7 @@ public class AntPathMatcher implements PatternMatcher {
    * @param str     string which must be matched against the pattern.
    *                Must not be <code>null</code>.
    * @return <code>true</code> if the string matches against the
-   *         pattern, or <code>false</code> otherwise.
+   * pattern, or <code>false</code> otherwise.
    */
   private boolean matchStrings(String pattern, String str) {
     char[] patArr = pattern.toCharArray();
@@ -335,17 +337,21 @@ public class AntPathMatcher implements PatternMatcher {
    * Given a pattern and a full path, determine the pattern-mapped part.
    * <p>For example:
    * <ul>
-   * <li>'<code>/docs/cvs/commit.html</code>' and '<code>/docs/cvs/commit.html</code> -> ''</li>
-   * <li>'<code>/docs/*</code>' and '<code>/docs/cvs/commit</code> -> '<code>cvs/commit</code>'</li>
-   * <li>'<code>/docs/cvs/*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>commit.html</code>'</li>
-   * <li>'<code>/docs/**</code>' and '<code>/docs/cvs/commit</code> -> '<code>cvs/commit</code>'</li>
-   * <li>'<code>/docs/**\/*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>cvs/commit.html</code>'</li>
-   * <li>'<code>/*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>docs/cvs/commit.html</code>'</li>
-   * <li>'<code>*.html</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>/docs/cvs/commit.html</code>'</li>
-   * <li>'<code>*</code>' and '<code>/docs/cvs/commit.html</code> -> '<code>/docs/cvs/commit.html</code>'</li>
+   * <li><code>/docs/cvs/commit.html</code> and <code>/docs/cvs/commit.html</code>  </li>
+   * <li><code>/docs/*</code> and <code>/docs/cvs/commit</code>  <code>cvs/commit</code></li>
+   * <li><code>/docs/cvs/*.html</code> and <code>/docs/cvs/commit.html</code>  <code>commit.html</code></li>
+   * <li><code>/docs/**</code> and <code>/docs/cvs/commit</code>  <code>cvs/commit</code></li>
+   * <li><code>/docs/**\/*.html</code> and <code>/docs/cvs/commit.html</code>  <code>cvs/commit.html</code></li>
+   * <li><code>/*.html</code> and <code>/docs/cvs/commit.html</code>  <code>docs/cvs/commit.html</code></li>
+   * <li><code>*.html</code> and <code>/docs/cvs/commit.html</code>  <code>/docs/cvs/commit.html</code></li>
+   * <li><code>*</code> and <code>/docs/cvs/commit.html</code>  <code>/docs/cvs/commit.html</code></li>
    * </ul>
-   * <p>Assumes that {@link #match} returns <code>true</code> for '<code>pattern</code>'
-   * and '<code>path</code>', but does <strong>not</strong> enforce this.
+   * <p>Assumes that {@link #match} returns <code>true</code> for <code>pattern</code>
+   * and <code>path</code>, but does <strong>not</strong> enforce this.
+   *
+   * @param path    the path String to test
+   * @param pattern pattern to match against.                Must not be <code>null</code>.
+   * @return String
    */
   public String extractPathWithinPattern(String pattern, String path) {
     String[] patternParts = tokenizeToStringArray(pattern, this.pathSeparator);

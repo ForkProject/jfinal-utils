@@ -23,7 +23,8 @@ public class JaxbKit {
    *
    * @param src   src
    * @param clazz clazz
-   * @return
+   * @param <T>   t
+   * @return T t
    */
   @SuppressWarnings("unchecked")
   public static <T> T unmarshal(String src, Class<T> clazz) {
@@ -62,7 +63,7 @@ public class JaxbKit {
 
   /**
    * object  string
-   *
+   *@param jaxbElement jaxb
    * @return string
    * @author kid create 2013-4-1
    */
