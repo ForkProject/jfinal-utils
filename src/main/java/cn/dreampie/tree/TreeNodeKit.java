@@ -18,7 +18,8 @@ public class TreeNodeKit {
       Collections.sort(params, new Comparator<TreeNode>() {
         @Override
         public int compare(TreeNode rp1, TreeNode rp2) {
-          return Long.compare(rp1.getParentId(), rp2.getParentId());
+          return new Long(rp1.getParentId()).compareTo(rp2.getParentId());
+//          return Long.compare(rp1.getParentId(), rp2.getParentId());
         }
       });
       nodes = toTree(params, ((TreeNode) params.get(0)).getParentId());
@@ -33,7 +34,8 @@ public class TreeNodeKit {
       Collections.sort(params, new Comparator<TreeNode>() {
         @Override
         public int compare(TreeNode rp1, TreeNode rp2) {
-          return Long.compare(rp1.getParentId(), rp2.getParentId());
+//          return Long.compare(rp1.getParentId(), rp2.getParentId());
+          return new Long(rp1.getParentId()).compareTo(rp2.getParentId());
         }
       });
       nodes = toTreeLevel(params, ((TreeNode) params.get(0)).getParentId(), level);
