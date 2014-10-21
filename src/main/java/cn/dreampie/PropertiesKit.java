@@ -46,7 +46,7 @@ public class PropertiesKit {
     //判断是否带有文件分隔符
     boolean startStuff = file.startsWith("/");
     if (startStuff)
-      fullFile = PathKit.getWebRootPath() + File.separator + "WEB-INF" + file.replace("/", File.separator);
+      fullFile = PathKit.getWebRootPath() + File.separator + "WEB-INF" + File.separator + file.substring(1);
     else
       fullFile = PathKit.getWebRootPath() + File.separator + "WEB-INF" + File.separator + file;
     File propFile = new File(fullFile);
@@ -57,7 +57,7 @@ public class PropertiesKit {
     //判断文件是否存在WebInf
     if (!propFile.exists()) {
       if (startStuff) {
-        fullFile = file.replace("/", "");
+        fullFile = file.replaceFirst("/", "");
 //        fullFile = PathKit.getRootClassPath() + file;
       } else {
         fullFile = file;
@@ -66,6 +66,7 @@ public class PropertiesKit {
 
       try {
         urls = PropertiesKit.class.getClassLoader().getResources(fullFile);
+
         while (urls.hasMoreElements()) {
           url = urls.nextElement();
           if (!"jar".equals(url.getProtocol()))
