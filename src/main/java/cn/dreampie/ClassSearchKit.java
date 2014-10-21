@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -72,7 +73,7 @@ public class ClassSearchKit {
           String[] paths = basePath.split("!/");
           // 获取jar
           try {
-            classFiles = findJarFile(paths[0].replace("file:", ""), paths[1]);
+            classFiles = findJarFile(URLDecoder.decode(paths[0].replace("file:", ""), "UTF-8"), paths[1]);
           } catch (IOException e) {
             e.printStackTrace();
           }
