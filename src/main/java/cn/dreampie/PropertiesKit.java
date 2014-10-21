@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,23 +44,37 @@ public class PropertiesKit {
     InputStream inputStream = null;
     String fullFile;  // String fullFile = PathUtil.getWebRootPath() + file;
     //判断是否带有文件分隔符
-    boolean startStuff = file.startsWith(File.separator);
+    boolean startStuff = file.startsWith("/");
     if (startStuff)
-      fullFile = PathKit.getWebRootPath() + File.separator + "WEB-INF" + file;
+      fullFile = PathKit.getWebRootPath() + File.separator + "WEB-INF" + file.replace("/", File.separator);
     else
       fullFile = PathKit.getWebRootPath() + File.separator + "WEB-INF" + File.separator + file;
     File propFile = new File(fullFile);
 
+
+    Enumeration<URL> urls = null;
     URL url = null;
     //判断文件是否存在WebInf
     if (!propFile.exists()) {
       if (startStuff) {
-        url = PropertiesKit.class.getResource(file);
+        fullFile = file.replace("/", "");
 //        fullFile = PathKit.getRootClassPath() + file;
       } else {
-        url = PropertiesKit.class.getResource(File.separator + file);
+        fullFile = file;
 //        fullFile = PathKit.getRootClassPath() + File.separator + file;
       }
+
+      try {
+        urls = PropertiesKit.class.getClassLoader().getResources(fullFile);
+        while (urls.hasMoreElements()) {
+          url = urls.nextElement();
+          if (!"jar".equals(url.getProtocol()))
+            break;
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
 
 //      propFile = new File(fullFile);
       //判断文件是否存在class
