@@ -3,12 +3,12 @@ package cn.dreampie;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +18,8 @@ import java.util.concurrent.ConcurrentMap;
  * Created by wangrenhui on 14-4-10.
  */
 public class PropertiesKit {
-  private ConcurrentMap<String, Object> properties = new ConcurrentHashMap<String, Object>();
+  private ConcurrentMap<String, Object> propertiesAttrs = new ConcurrentHashMap<String, Object>();
+  private ConcurrentMap<String, Properties> propertiesFiles = new ConcurrentHashMap<String, Properties>();
 
   private static PropertiesKit propertiesKit = new PropertiesKit();
 
@@ -28,13 +29,65 @@ public class PropertiesKit {
   }
 
   public static boolean exist(String file) {
-    URL url = PathKit.class.getResource(file);
-    if (url != null)
-      return true;
+    Enumeration<URL> urls = null;
+    try {
+      urls = PropertiesKit.class.getClassLoader().getResources(file);
+      while (urls.hasMoreElements()) {
+        return true;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     return false;
   }
 
+
+  /**
+   * load 属性文件 已经存在文件则直接返回
+   *
+   * @param file 文件路径
+   * @return 属性文件
+   */
+  public List<Properties> loadPropertyFiles(String... file) {
+    List<Properties> propertieses = new ArrayList<Properties>();
+    for (String path : file) {
+      propertieses.add(loadPropertyFile(false, path));
+    }
+    return propertieses;
+  }
+
+  /**
+   * load 属性文件 已经存在文件则直接返回
+   *
+   * @param file 文件路径
+   * @return 属性文件
+   */
+  public List<Properties> loadPropertyFiles(boolean reload, String... file) {
+    List<Properties> propertieses = new ArrayList<Properties>();
+    for (String path : file) {
+      propertieses.add(loadPropertyFile(reload, path));
+    }
+    return propertieses;
+  }
+
+  /**
+   * load 属性文件 已经存在文件则直接返回
+   *
+   * @param file 文件路径
+   * @return 属性文件
+   */
   public Properties loadPropertyFile(String file) {
+    return loadPropertyFile(false, file);
+  }
+
+  /**
+   * load 属性文件
+   *
+   * @param file   文件路径
+   * @param reload 如果已经加载文件 是否重载
+   * @return 属性文件
+   */
+  public Properties loadPropertyFile(boolean reload, String file) {
     Properties properties = new Properties();
     if (StrKit.isBlank(file))
       throw new IllegalArgumentException("Parameter of file can not be blank");
@@ -58,10 +111,8 @@ public class PropertiesKit {
     if (!propFile.exists()) {
       if (startStuff) {
         fullFile = file.replaceFirst("/", "");
-//        fullFile = PathKit.getRootClassPath() + file;
       } else {
         fullFile = file;
-//        fullFile = PathKit.getRootClassPath() + File.separator + file;
       }
 
       try {
@@ -76,12 +127,20 @@ public class PropertiesKit {
         e.printStackTrace();
       }
 
-
 //      propFile = new File(fullFile);
       //判断文件是否存在class
       if (url == null) {
         throw new IllegalArgumentException("Properties file not found: " + fullFile);
+      } else {
+        try {
+          fullFile = URLDecoder.decode(url.getFile(), "UTF-8");
+          if (hasPropertiesFile(reload, fullFile)) return propertiesFiles.get(fullFile);
+        } catch (UnsupportedEncodingException e) {
+          e.printStackTrace();
+        }
       }
+    } else {
+      if (hasPropertiesFile(reload, fullFile)) return propertiesFiles.get(fullFile);
     }
     try {
       //不是通过resource读取
@@ -106,23 +165,31 @@ public class PropertiesKit {
       }
     }
     if (properties != null) {
+      propertiesFiles.put(fullFile, properties);
       for (Entry<Object, Object> entry : properties.entrySet()) {
-        this.properties.put(entry.getKey().toString(), entry.getValue());
+        this.propertiesAttrs.put(entry.getKey().toString(), entry.getValue());
       }
     }
     return properties;
   }
 
+  private boolean hasPropertiesFile(boolean reload, String fullFile) {
+    if (!reload && propertiesFiles.containsKey(fullFile)) {
+      return true;
+    }
+    return false;
+  }
+
   public String getProperty(String key) {
-    if (this.properties.containsKey(key)) {
-      return properties.get(key).toString();
+    if (this.propertiesAttrs.containsKey(key)) {
+      return propertiesAttrs.get(key).toString();
     }
     return null;
   }
 
   public String getProperty(String key, String defaultValue) {
-    if (this.properties.containsKey(key)) {
-      return properties.get(key).toString();
+    if (this.propertiesAttrs.containsKey(key)) {
+      return propertiesAttrs.get(key).toString();
     }
     return defaultValue;
   }
