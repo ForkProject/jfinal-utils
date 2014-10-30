@@ -104,50 +104,21 @@ public class PropertiesKit {
       fullFile = PathKit.getWebRootPath() + File.separator + "WEB-INF" + File.separator + file;
     File propFile = new File(fullFile);
 
-
-    Enumeration<URL> urls = null;
-    URL url = null;
     //判断文件是否存在WebInf
     if (!propFile.exists()) {
-      if (startStuff) {
-        fullFile = file.replaceFirst("/", "");
-      } else {
-        fullFile = file;
+      if (!startStuff) {
+        fullFile = "/" + file;
       }
+      if (hasPropertiesFile(reload, fullFile)) return propertiesFiles.get(fullFile);
 
-      try {
-        urls = PropertiesKit.class.getClassLoader().getResources(fullFile);
-
-        while (urls.hasMoreElements()) {
-          url = urls.nextElement();
-          if (!"jar".equals(url.getProtocol()))
-            break;
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-//      propFile = new File(fullFile);
-      //判断文件是否存在class
-      if (url == null) {
-        throw new IllegalArgumentException("Properties file not found: " + fullFile);
-      } else {
-        try {
-          fullFile = URLDecoder.decode(url.getFile(), "UTF-8");
-          if (hasPropertiesFile(reload, fullFile)) return propertiesFiles.get(fullFile);
-        } catch (UnsupportedEncodingException e) {
-          e.printStackTrace();
-        }
-      }
+      inputStream = PropertiesKit.class.getResourceAsStream(fullFile);
     } else {
       if (hasPropertiesFile(reload, fullFile)) return propertiesFiles.get(fullFile);
     }
     try {
       //不是通过resource读取
-      if (url == null)
+      if (inputStream == null)
         inputStream = new FileInputStream(propFile);
-      else
-        inputStream = url.openStream();
 
       properties.load(inputStream);
     } catch (Exception eOne) {
