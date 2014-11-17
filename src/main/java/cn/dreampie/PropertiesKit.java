@@ -108,6 +108,8 @@ public class PropertiesKit {
     if (!propFile.exists()) {
       if (!startStuff) {
         fullFile = "/" + file;
+      } else {
+        fullFile = file;
       }
       if (hasPropertiesFile(reload, fullFile)) return propertiesFiles.get(fullFile);
 
